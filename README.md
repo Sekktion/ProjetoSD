@@ -12,6 +12,7 @@ Nem todos os requisitos foram implementados, mas dentre os realizados estão:
 * Armazenamento dos dados no cache local dos Portais.
 
 Vale enfatizar então que o Portai e o Cliente de matrícula não foram implementados.
+Para mais detalhes, [DIFICULDADES.md](https://github.com/Sekktion/ProjetoSD/blob/main/DIFICULDADES.md#descrição-das-dificuldades-com-indicação-do-que-não-foi-implementado).
 
 ## Utilização
 ### Instalando Dependências
