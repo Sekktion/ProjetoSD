@@ -245,7 +245,7 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
     def NovaDisciplina(self, request, context):
         if len(request.sigla) > 4 and len(request.nome) > 4:
             if request.sigla not in self.disciplinas:
-                self.disciplinas[request.sigla] = request.nome
+                self.disciplinas[request.sigla] = {request.nome, request.vagas}
                 if context != None:
                     msg = json.dumps({"uuid": str(myuuid), "mode": "POST",
                                        "type": 2,"nome": request.nome,
@@ -260,7 +260,7 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
     def EditaDisciplina(self, request, context):
         if len(request.sigla) > 4 and len(request.nome) > 4:
             if request.sigla in self.disciplinas:
-                self.disciplinas[request.sigla] = request.nome
+                self.disciplinas[request.sigla] = {request.nome, request.vagas}
                 if context != None:
                     msg = json.dumps({"uuid": str(myuuid), "mode": "PUT", "type": 2,
                                       "nome": request.nome, "id": request.sigla,
