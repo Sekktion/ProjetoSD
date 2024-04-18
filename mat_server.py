@@ -28,14 +28,15 @@ class ServicoPortalMatricula(pm_pb2_grpc.PortalMatriculaServicer):
 
     def on_message(self, client, userdata, msg):
         print(f"Recebido do 'admin_topic': {msg.payload}")
-
+        
+    ## WIP
     def AdicionaProfessor(self, request):
-        disciplina = request.disciplina
         siape = request.idPessoa
-
+        disciplina = request.disciplina
+        
         if disciplina in self.disciplinas:
-            if siape not in self.professores:
-                self.professores[siape] = request.idPessoa
+            if siape in self.professores:
+                self.disciplinas[disciplina] = siape
                 self.publicar_mensagem("Novo professor adicionado à disciplina")
                 return pm_pb2.Status(status=0, msg="Professor adicionado com sucesso")
             else:
