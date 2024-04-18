@@ -35,8 +35,7 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
     def publicar_mensagem_mat(self, mensagem):
         self.client.publish("servers_mat", mensagem)
 
-    # Interpreta as mensagens recebidas pelos outros portais. (Infelizmente só um portal de cada tipo é suportado
-    # por vez)
+    # Interpreta as mensagens recebidas pelos outros portais.
     #
     def on_message(self, client, userdata, msg):
         contents = json.loads(msg.payload)
@@ -48,6 +47,7 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
             # Type = 0 (Aluno) / 1 (Professor) / 2 (Disciplina)
             #     Indica o tipo de dado que é feita a operação
 
+            # Para criar um dado
             if contents['mode'] == "POST":
                 if contents['type'] == 0:
                     print(f"Ordens: Criar aluno {contents['nome']} de matricula {contents['id']}")
@@ -60,11 +60,13 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
                                                               nome=contents['nome']), None)
                     print(res.msg)
                 elif contents['type'] == 2:
-                    print(f"Criar disciplina {contents['nome']} de sigla {contents['id']}")
+                    print(f"Criar disciplina {contents['nome']}" + 
+                          f" de sigla {contents['id']} com {contents['id']} vagas")
                     res = self.NovaDisciplina(pa_pb2.Disciplina(sigla=contents['id'],
                                                                 nome=contents['nome']), None)
                     print(res.msg)
 
+            # Para modificar algum dado
             elif contents['mode'] == "PUT":
                 if contents['type'] == 0:
                     print(f"Modificar nome do aluno de matricula {contents['id']} para {contents['nome']}")
@@ -83,6 +85,7 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
                                                                 nome=contents['nome']), None)
                     print(res.msg)
 
+            # Para apagar alguma informação
             elif contents['mode'] == "DELETE":
                 if contents['type'] == 0:
                     print(f"Remover aluno de matricula {contents['id']}")
@@ -97,21 +100,23 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
                     res = self.RemoveDisciplina(pa_pb2.Identificador(id=contents['id']), None)
                     print(res.msg)
 
+            # Para atualizar outro portal
             elif contents['mode'] == "GET":
-                if contents['source'] == "mat":
-                    if contents['type'] == 0:
-                        print(f"Consultar aluno de matricula {contents['id']}")
-                        res = self.RemoveAluno(pa_pb2.Identificador(id=contents['id']), None)
-                        print(res.msg)
-                    elif contents['type'] == 1:
-                        print(f"Consultar professor de siape {contents['id']}")
-                        res = self.RemoveProfessor(pa_pb2.Identificador(id=contents['id']), None)
-                        print(res.msg)
-                    elif contents['type'] == 2:
-                        print(f"Consultar disciplina de sigla {contents['id']}")
-                        res = self.RemoveDisciplina(pa_pb2.Identificador(id=contents['id']), None)
-                        print(res.msg)
-                else:
+                ## Teste de Integração com portal de Matrícula
+                # if contents['source'] == "mat":
+                #     if contents['type'] == 0:
+                #         print(f"Consultar aluno de matricula {contents['id']}")
+                #         res = self.RemoveAluno(pa_pb2.Identificador(id=contents['id']), None)
+                #         print(res.msg)
+                #     elif contents['type'] == 1:
+                #         print(f"Consultar professor de siape {contents['id']}")
+                #         res = self.RemoveProfessor(pa_pb2.Identificador(id=contents['id']), None)
+                #         print(res.msg)
+                #     elif contents['type'] == 2:
+                #         print(f"Consultar disciplina de sigla {contents['id']}")
+                #         res = self.RemoveDisciplina(pa_pb2.Identificador(id=contents['id']), None)
+                #         print(res.msg)
+                # else:
                     print("get")
                     msg = json.dumps({"uuid": str(myuuid), "mode": "SERVER_UPDATE", "alunos": self.alunos,
                                       "professores": self.professores, "disciplinas": self.disciplinas})
@@ -242,8 +247,9 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
             if request.sigla not in self.disciplinas:
                 self.disciplinas[request.sigla] = request.nome
                 if context != None:
-                    msg = json.dumps({"uuid": str(myuuid), "mode": "POST", "type": 2,
-                                      "nome": request.nome, "id": request.sigla})
+                    msg = json.dumps({"uuid": str(myuuid), "mode": "POST",
+                                       "type": 2,"nome": request.nome,
+                                       "id": request.sigla,"vagas": request.vagas})
                     self.publicar_mensagem_adm(msg)
                 return pa_pb2.Status(status=0, msg="Disciplina cadastrada com sucesso")
             else:
@@ -257,7 +263,8 @@ class ServicoPortalAdministrativo(pa_pb2_grpc.PortalAdministrativoServicer):
                 self.disciplinas[request.sigla] = request.nome
                 if context != None:
                     msg = json.dumps({"uuid": str(myuuid), "mode": "PUT", "type": 2,
-                                      "nome": request.nome, "id": request.sigla})
+                                      "nome": request.nome, "id": request.sigla,
+                                      "vagas": request.vagas})
                     self.publicar_mensagem_adm(msg)
                 return pa_pb2.Status(status=0, msg="Disciplina editada com sucesso")
             else:

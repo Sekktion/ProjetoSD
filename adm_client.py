@@ -96,14 +96,15 @@ def main():
         elif escolha == "11":
             sigla = input("Digite a sigla da disciplina: ")
             nome = input("Digite o nome da disciplina: ")
-            vagas = input("Digite a quantidade de vagas da disciplina: ")
+            vagas = int(input("Digite a quantidade de vagas da disciplina: "))
             response = stub.NovaDisciplina(pa_pb2.Disciplina(sigla=sigla, nome=nome, vagas=vagas))
             print(response.msg)
 
         elif escolha == "12":
             sigla = input("Digite a sigla da disciplina a ser editada: ")
             nome = input("Digite o novo nome da disciplina: ")
-            response = stub.EditaDisciplina(pa_pb2.Disciplina(sigla=sigla, nome=nome))
+            nome = int(input("Digite as vagas da disciplina: "))
+            response = stub.EditaDisciplina(pa_pb2.Disciplina(sigla=sigla, nome=nome, vagas=vagas))
             print(response.msg)
 
         elif escolha == "13":

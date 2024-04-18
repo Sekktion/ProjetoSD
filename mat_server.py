@@ -29,7 +29,7 @@ class ServicoPortalMatricula(pm_pb2_grpc.PortalMatriculaServicer):
     def on_message(self, client, userdata, msg):
         print(f"Recebido do 'admin_topic': {msg.payload}")
 
-    def AdicionaProfessor(pm.pb2.DisciplinaPessoa):
+    def AdicionaProfessor(self, request):
         disciplina = request.disciplina
         siape = request.idPessoa
 
