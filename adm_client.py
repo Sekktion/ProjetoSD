@@ -96,7 +96,8 @@ def main():
         elif escolha == "11":
             sigla = input("Digite a sigla da disciplina: ")
             nome = input("Digite o nome da disciplina: ")
-            response = stub.NovaDisciplina(pa_pb2.Disciplina(sigla=sigla, nome=nome))
+            vagas = input("Digite a quantidade de vagas da disciplina: ")
+            response = stub.NovaDisciplina(pa_pb2.Disciplina(sigla=sigla, nome=nome, vagas=vagas))
             print(response.msg)
 
         elif escolha == "12":

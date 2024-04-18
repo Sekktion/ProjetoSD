@@ -1,7 +1,7 @@
 import grpc
 import paho.mqtt.client as mqtt
 import json
-import uuidI
+import uuid
 from concurrent import futures
 
 import pm_pb2
