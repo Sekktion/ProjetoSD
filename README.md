@@ -1,3 +1,7 @@
+ProjetoSD é um pequeno projeto prático dos conceitos aprendidos em aula durante o curso de Sistemas Distribuídos como parte do bacharelado em Ciência da Computação.
+Seu propósito é exemplificar estratégias de comunicação entre diferentes instâncias de um servidor através de um _broker_, no caso, o MQTT e de implementação de _Middleware_ de comunicação entre Cliente e Servidor utilizando Remote Procedure Calls através do gRPC.
+Possui capacidade de comunicar mudanças e atualizar outras instâncias do servidor em tempo real, armazenando os dados em memória volátil.
+
 # Key-value store client
 
 Implementação de KVS como conseguimos de acordo com [estas](https://paulo-coelho.github.io/ds_notes/projeto/) especificações. 
